@@ -10,20 +10,20 @@ from tools import (
 )
 
 if __name__ == "__main__":
+    action_args = get_current_list_item_action_args()
     path = get_current_list_item_path()
     path = action_replace(
         path,
         {
-            "showSeasons": "shufflePlay",
-            "smartPlay": "shufflePlay",
-            "getSources": "shufflePlay",
-            "playbackResume": "shufflePlay",
+            "showSeasons": "playFromRandomPoint",
+            "smartPlay": "playFromRandomPoint",
+            "flatEpisodes": "playFromRandomPoint",
+            "playbackResume": "playFromRandomPoint",
         },
     )
 
-    action_args = get_current_list_item_action_args()
     xbmc.log(
-        "context.seren: Shuffle Play ({})".format(action_args.get("trakt_id")),
-        xbmc.LOGDEBUG,
+        "context.seren: Play from Random Episode ({})".format(action_args["trakt_id"]),
+        xbmc.LOGINFO,
     )
     xbmc.executebuiltin("RunPlugin({})".format(path))

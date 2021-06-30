@@ -14,16 +14,14 @@ if __name__ == "__main__":
     path = action_replace(
         path,
         {
-            "showSeasons": "shufflePlay",
-            "smartPlay": "shufflePlay",
-            "getSources": "shufflePlay",
-            "playbackResume": "shufflePlay",
+            "showSeasons": "forceResumeShow",
+            "flatEpisodes": "forceResumeShow",
         },
     )
 
     action_args = get_current_list_item_action_args()
     xbmc.log(
-        "context.seren: Shuffle Play ({})".format(action_args.get("trakt_id")),
+        "context.seren: Quick Resume Show ({})".format(action_args.get("trakt_id")),
         xbmc.LOGDEBUG,
     )
     xbmc.executebuiltin("RunPlugin({})".format(path))
