@@ -25,27 +25,27 @@ msgctxt "#30003"
 msgid "Rescrape Item"
 msgstr "Rescrape-Artikel"
 
-#: addon.xml:25 /resources/settings.xml:9
+#: addon.xml:29 /resources/settings.xml:10
 msgctxt "#30004"
 msgid "Source Select"
 msgstr "Quellenauswahl"
 
-#: addon.xml:29 /resources/settings.xml:10
+#: addon.xml:33 /resources/settings.xml:11
 msgctxt "#30005"
 msgid "Find Similar"
 msgstr "Find Similar"
 
-#: addon.xml:33 /resources/settings.xml:11
+#: addon.xml:37 /resources/settings.xml:12
 msgctxt "#30006"
 msgid "Browse Show"
 msgstr "Durchsuchen Show"
 
-#: addon.xml:37 /resources/settings.xml:12
+#: addon.xml:41 /resources/settings.xml:13
 msgctxt "#30007"
 msgid "Browse Season"
 msgstr "Durchsuchen Saison"
 
-#: addon.xml:41 /resources/settings.xml:13
+#: addon.xml:45 /resources/settings.xml:14
 msgctxt "#30008"
 msgid "Trakt Manager"
 msgstr "Trakt Manager"
@@ -54,3 +54,8 @@ msgstr "Trakt Manager"
 msgctxt "#30009"
 msgid "General"
 msgstr "Allgemein"
+
+#: addon.xml:25 /resources/settings.xml:9
+msgctxt "#30010"
+msgid "Rescrape and Source Select"
+msgstr "Rescrape und Quellauswahl"
