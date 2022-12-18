@@ -1,32 +1,17 @@
+import contextlib
 import json
 import sys
+from urllib.parse import parse_qsl
+from urllib.parse import quote
+from urllib.parse import unquote
+from urllib.parse import urlencode
+from urllib.parse import urlparse
+from urllib.parse import urlunparse
 
-try:
-    # Try to get Python 3 versions
-    from urllib.parse import (
-        parse_qsl,
-        urlencode,
-        quote_plus,
-        parse_qs,
-        quote,
-        unquote,
-        urlparse,
-        urlunparse,
-        urljoin,
-    )
-except ImportError:
-    # Fall back on future.backports to ensure we get unicode compatible PY3 versions in PY2
-    from future.backports.urllib.parse import (
-        parse_qsl,
-        urlencode,
-        quote_plus,
-        parse_qs,
-        quote,
-        unquote,
-        urlparse,
-        urlunparse,
-        urljoin,
-    )
+import xbmc
+import xbmcaddon
+
+ADDON_ID = xbmcaddon.Addon().getAddonInfo("id")
 
 
 def get_current_list_item():
@@ -45,10 +30,7 @@ def get_current_list_item_path():
     :return: The path of the list item
     :rtype: str|unicode
     """
-    item = get_current_list_item()
-    if item:
-        return item.getPath()
-    return None
+    return item.getPath() if (item := get_current_list_item()) else None
 
 
 def get_current_list_item_action_args():
@@ -58,10 +40,7 @@ def get_current_list_item_action_args():
     :return: The action_args of the list item
     :rtype: dict
     """
-    path = get_current_list_item_path()
-    if path:
-        return get_action_args(path)
-    return {}
+    return get_action_args(path) if (path := get_current_list_item_path()) else {}
 
 
 def get_query_params(url):
@@ -72,8 +51,7 @@ def get_query_params(url):
     :return: A dictionary of query parameters
     :rtype: dict
     """
-    query_string = urlparse(url).query
-    if query_string:
+    if query_string := urlparse(url).query:
         return dict(parse_qsl(query_string))
     return {}
 
@@ -87,16 +65,12 @@ def get_action_args(url):
     :return: The decoded and parsed action_args
     :rtype: dict
     """
-    query_parameters = get_query_params(url)
-    if query_parameters:
-        action_arg_str = query_parameters.get("action_args")
-        if action_arg_str:
-            try:
+    if query_parameters := get_query_params(url):
+        if action_arg_str := query_parameters.get("action_args"):
+            with contextlib.suppress(json.JSONDecodeError):
                 action_args = json.loads(unquote(action_arg_str))
                 if action_args and isinstance(action_args, dict):
                     return action_args
-            except json.JSONDecodeError:
-                pass
     return {}
 
 
@@ -124,15 +98,12 @@ def action_replace(url, action_map):
              if the action parameter value is not found in the action_map
     :rtype: str|unicode
     """
-    if not action_map or not isinstance(action_map, dict):
+    if not (action_map and isinstance(action_map, dict)):
         return url
 
-    query_parameters = get_query_params(url)
-    if query_parameters:
-        action = query_parameters.get("action")
-        if action:
-            replacement = action_map.get(action)
-            if replacement:
+    if query_parameters := get_query_params(url):
+        if action := query_parameters.get("action"):
+            if replacement := action_map.get(action):
                 return update_query_params(url, {"action": replacement})
     return url
 
@@ -148,11 +119,10 @@ def pop_query_param(url, param):
     :return: The modified URL or the original URL if the param provided does not exist
     :rtype: str|unicode
     """
-    if not url or not param:
+    if not (url and param):
         return url
 
-    query_parameters = get_query_params(url)
-    if query_parameters:
+    if query_parameters := get_query_params(url):
         popped = query_parameters.pop(param, None)
         if popped is not None:
             parsed_url_parts = list(urlparse(url))
@@ -176,8 +146,26 @@ def update_query_params(url, params):
     """
     if not url or not params or not isinstance(params, dict):
         return url
+
     query_parameters = get_query_params(url)
     query_parameters.update(params)
     parsed_url_parts = list(urlparse(url))
     parsed_url_parts[4] = str(urlencode(query_parameters))
     return urlunparse(parsed_url_parts)
+
+
+def log(message, level=xbmc.LOGINFO):
+    """
+    Log a message to kodi log prefixing with addon id
+    :param message: The message to log
+    :param level: The logging level, 0-3 or xbmc.LOGXXXX constant.  Default: xbmc.LOGINFO/1
+    """
+    xbmc.log(f"{ADDON_ID}: {message}", level)
+
+
+def log_error(message):
+    """
+    Convenience method to log an error
+    :param message: The message to log
+    """
+    log(message, xbmc.LOGERROR)

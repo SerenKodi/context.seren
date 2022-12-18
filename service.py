@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import xbmc
 import xbmcaddon
 
@@ -8,6 +6,7 @@ properties = [
     "context.seren.shuffle",
     "context.seren.playFromRandomPoint",
     "context.seren.rescrape",
+    "context.seren.rescrape_ss",
     "context.seren.sourceSelect",
     "context.seren.findSimilar",
     "context.seren.browseShow",
@@ -18,7 +17,7 @@ properties = [
 
 class PropertiesUpdater(xbmc.Monitor):
     def __init__(self):
-        super(PropertiesUpdater, self).__init__()
+        super().__init__()
         self.addon = xbmcaddon.Addon()
         self._update_window_properties()
 
@@ -32,14 +31,10 @@ class PropertiesUpdater(xbmc.Monitor):
         for prop in properties:
             setting = self.addon.getSetting(prop)
             if setting == "false":
-                xbmc.executebuiltin("SetProperty({},{},home)".format(prop, setting))
+                xbmc.executebuiltin(f"SetProperty({prop},{setting},home)")
             else:
-                xbmc.executebuiltin("ClearProperty({},home)".format(prop))
-            xbmc.log(
-                "Context menu item {}: {}".format(
-                    "disabled" if setting == "false" else "enabled", prop
-                )
-            )
+                xbmc.executebuiltin(f"ClearProperty({prop},home)")
+            xbmc.log(f'Context menu item {"disabled" if setting == "false" else "enabled"}: {prop}')
 
 
 xbmc.log("context.seren service: starting", xbmc.LOGINFO)
@@ -51,7 +46,7 @@ try:
     # wait until abort is requested
     properties_monitor.waitForAbort()
 except Exception as e:
-    xbmc.log("context.seren service: error - {}".format(e), xbmc.LOGERROR)
+    xbmc.log(f"context.seren service: error - {e}", xbmc.LOGERROR)
 finally:
     del properties_monitor
 
