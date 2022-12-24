@@ -9,9 +9,9 @@ def context(argv):
 
         QuickResume().execute()
     elif arg == "shuffle":
-        from resources.lib.action.plugin import QuickResume
+        from resources.lib.action.plugin import ShufflePlay
 
-        QuickResume().execute()
+        ShufflePlay().execute()
     elif arg == "playFromRandomPoint":
         from resources.lib.action.plugin import PlayFromRandomPoint
 
