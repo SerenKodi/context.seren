@@ -22,7 +22,7 @@ msgstr "Speel een willekeurige aflevering"
 #: addon.xml:20 /resources/settings.xml:21
 msgctxt "#30003"
 msgid "Rescrape Item"
-msgstr "Her-schraap item"
+msgstr "Rescrape item"
 
 #: addon.xml:28 /resources/settings.xml:31
 msgctxt "#30004"
